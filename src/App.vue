@@ -11,18 +11,23 @@ import LeftNav from './components/LeftNav.vue';
   </div>
 </template>
 
-<style scoped>
-body{
+<style scoped lang="less">
+body {
   padding: 0;
   margin: 0;
 }
+
 .wrapper {
   display: flex;
-}
-.RouterView{
-  width: 85vw;
+
+  .left-nav {
+    width: 15vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+
 
 }
-
-
 </style>
