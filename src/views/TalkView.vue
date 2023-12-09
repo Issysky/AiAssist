@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+      
       <div v-for="(message, index) in messages" :key="index">
           <div v-if="message.type === 'response'">
               <el-card class="response-card">
