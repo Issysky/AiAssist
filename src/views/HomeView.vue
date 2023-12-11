@@ -1,76 +1,92 @@
 <template>
   <div class="wrapper">
-    <div class="message-wrapper" v-if="!tipsShow">
-      <div class="message-area" v-for="(message, index) in messages" :key="index">
-        <p class="label">You</p>
-        <div class="user-send">{{ message.userContent }}</div>
-        <p class="label">Response</p>
-        <div class="response">{{ message.resContent }}</div>
+    <div class="model">模型1</div>
+    <div class="clear" @click="clear">×</div>
+    <div class="message-wrapper" v-if="store.messageArr.length != 0">
+      <div class="message-area" v-for="(message, index) in store.messageArr" :key="index">
+        <p class="label">{{ message.role === 'user' ? 'You' : "Res" }}</p>
+        <div class="send-res">{{ message.content }}</div>
       </div>
     </div>
-    <div class="tipsWrapper" v-if="tipsShow">
-      <div class="tips" v-for="button in buttons" :key="button.text" @click="sendMessage(button.text)">
+    <div class="tipsWrapper" v-if="store.messageArr.length == 0">
+      <div class="tips" v-for="button in buttons" :key="button.text" @click="sendMessage('user', button.text)">
         {{ button.text }}
       </div>
     </div>
     <div class="input-container">
-      <el-input
-        class="input"
-        v-model="inputMessage"
-        placeholder="请输入消息"
-        type="textarea"
-        :rows="4"
-      />
-      <el-button v-if="inputMessage" type="primary" @click="sendMessage">发送</el-button>
+      <el-input class="input " v-model="inputMessage" placeholder="请输入消息" type="textarea" :rows="4" />
+      <el-button v-if="inputMessage" type="info" plain @click="sendMessage('user', inputMessage.value)">↑</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useCounterStore } from '../stores/counter'
+import { onMounted, ref } from 'vue'
+import { useTalkStore } from '../stores/counter'
 
 // 定义消息类型
 interface Message {
-  userContent: string
-  resContent: string
+  role: string
+  content: string
 }
+interface Button {
+  type: string
+  text: string
+}
+
+// 定义buttons数组
+const buttons = ref<Button[]>([
+  { type: 'info', text: '你好，今天是几号，适合干嘛呢' },
+  { type: 'info', text: '你今年多大了' },
+  { type: 'info', text: '你叫什么' },
+  { type: 'info', text: 'tips4' }
+])
 
 // 获取输入的消息
 const inputMessage = ref('')
 // 获取store
-const store = useCounterStore()
+const store = useTalkStore()
 
-// 定义messages数组
-// const messages = store.messageArr
-const messages = ref<Message[]>([])
+// // 定义messages数组
+let messages = ref<Message[]>([])
+
+// 定义tips是否显示
 const tipsShow = ref(true)
 
-// const messages = ref<Message[]>([]);
-// // 发送信息方法
-const sendMessage = (msg: string) => {
+// 发送信息方法
+const sendMessage = (role: string, msg: string) => {
+  // console.log(store.messageArr)
+  // 发送信息后，tips消失
   tipsShow.value = false
+  console.log("调用sendMessage")
+  // 如果msg存在，就把msg赋值给inputMessage
   if (msg) {
     inputMessage.value = msg
   }
+  // 如果inputMessage存在，就把inputMessage的值push到messages数组中
   if (inputMessage.value) {
-    messages.value.push({
-      userContent: inputMessage.value,
-      resContent: '232'
-    })
+    store.addMessage('user', inputMessage.value)
     inputMessage.value = ''
   }
+  store.getTalks()
+  // 将msg和inputMessage置空
   msg = ''
   inputMessage.value = ''
 }
 
-// 定义buttons数组
-const buttons = [
-  { type: 'info', text: 'tips1' },
-  { type: 'info', text: 'tips2' },
-  { type: 'info', text: 'tips3' },
-  { type: 'info', text: 'tips4' }
-] as const
+// 清屏
+const clear = () => {
+  store.resetMessage()
+  tipsShow.value = true
+}
+
+const getMessage = () => {
+  messages.value = store.messageArr.slice(2)
+}
+onMounted(() => {
+  // 一开始就获取聊天记录
+  getMessage()
+})
 </script>
 
 <style scoped lang="less">
@@ -79,12 +95,42 @@ const buttons = [
   display: flex;
   justify-content: center;
   margin-left: 15%;
+
+  .model {
+    position: fixed;
+    width: 160px;
+    height: 40px;
+    // background-color:#bfc;
+    border: 2px solid #33333333;
+    border-radius: 15px;
+    text-align: center;
+    line-height: 40px;
+    left: 18vw;
+  }
+
+  .clear {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    font-size: 22px;
+    right: 5%;
+    top: 5%;
+    color: #33333388;
+    cursor: pointer;
+  }
+
+  .clear:hover {
+    color: #000;
+  }
+
   .message-wrapper {
     width: 40vw;
     overflow: hidden;
+    height: 70vh;
+    overflow-y: scroll;
 
     .message-area {
-      width: 40vw;
+      width: 35vw;
       margin-top: 50px;
       align-items: center; // 添加这一行
       font-size: 21px;
@@ -94,21 +140,15 @@ const buttons = [
         height: 20px;
         text-align: left;
       }
-      .user-send {
-        width: 40vw;
+
+      .send-res {
+        width: 100%;
         // 允许换行并且高度自适应
         word-wrap: break-word;
+        text-align: left;
         height: auto;
         margin-bottom: 20px;
-        font-size: 16px;
-      }
-
-      .response {
-        width: 40vw;
-        font-size: 16px;
-        // 允许换行并且高度自适应
-        word-wrap: break-word;
-        height: auto;
+        font-size: 22px;
       }
     }
   }
@@ -116,7 +156,8 @@ const buttons = [
   .tipsWrapper {
     // background-color: #bfc;
     width: 40vw;
-    margin: 30% auto 0;
+    margin: 65vh auto 0;
+
     .tips {
       width: 18vw;
       float: left;
@@ -129,11 +170,13 @@ const buttons = [
       margin-bottom: 5px;
       margin-right: 20px;
     }
+
     .tips:hover {
       background-color: rgb(168, 172, 169);
       color: #fff;
     }
   }
+
   .input-container {
     height: 20vh;
     width: 60vw;
@@ -145,16 +188,41 @@ const buttons = [
     background-color: #fff;
     // box-shadow:#333 0 0 10px ;
     border-radius: 10px;
+
     .input {
       width: 40vw;
       margin: 0 auto;
+      border-radius: 20px;
+      border: none;
     }
 
     .el-button {
+      width: 40px;
+      height: 40px;
       position: absolute;
-      right: 120px;
+      right: 10%;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 30px;
+
+      // border: 2px solid #33333388;
     }
   }
 }
-</style>
 
+
+.message-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.message-wrapper::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+.message-wrapper::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+}
+
+.message-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}</style>

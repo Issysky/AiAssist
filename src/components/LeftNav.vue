@@ -7,14 +7,15 @@
         <Tools />
       </el-icon>
     </div>
-    <el-button class="new-chat" plain type="info"
+    <!-- <el-button class="new-chat" plain type="info"
       ><el-icon class="plus"><Plus /></el-icon>
       <p>新对话</p>
-    </el-button>
+    </el-button> -->
     <div class="options">
-      <el-button v-for="button in buttons" :key="button.text" :type="button.type" text>{{
-        button.text
-      }}</el-button>
+      <el-button @click="changeModel(button.model)"  v-for="button in buttons" :key="button.text" :type="button.type"
+        text>{{
+          button.text
+        }}</el-button>
     </div>
     <!-- <div class="history">
       <div class="label">
@@ -32,21 +33,31 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useTalkStore } from '../stores/counter'
+
+const store = useTalkStore()
+const model1 = "现在请你扮演一个小学生，你的名字叫小明，你的年龄是10岁，你的爱好是打篮球"
+const model2 = "现在请你扮演一个大学生，你的名字叫小红，你的年龄是18岁，你的爱好是打羽毛球"
 // 存储按钮选项
 const buttons = [
-  { type: 'info', text: '模型1' },
-  { type: 'info', text: '模型2' },
-  { type: 'info', text: '模型3' },
-  { type: 'info', text: '模型4' }
+  { type: 'info', text: '模型1', model: model1, isActive: 'true' },
+  { type: 'info', text: '模型2', model: model2, isActive: 'false' },
 ] as const
 
+const changeModel = (model: string) => {
+  store.resetMessage()
+  store.changePrompt(model)
+  
+}
+
+
 // 存储会话信息
-const talks = [
-  { type: '', text: '12345123456123456123' },
-  { type: ' ', text: '123456123456123456sa' },
-  { type: ' ', text: '模1234561234561234' },
-  { type: ' ', text: 'asdasdasdasdsad' }
-] as const
+// const talks = [
+//   { type: '', text: '12345123456123456123' },
+//   { type: ' ', text: '123456123456123456sa' },
+//   { type: ' ', text: '模1234561234561234' },
+//   { type: ' ', text: 'asdasdasdasdsad' }
+// ] as const
 </script>
 
 <style scoped>
@@ -108,14 +119,17 @@ const talks = [
   text-align: left;
   line-height: 40px;
 }
+
 .plus {
   width: 20px;
   margin-top: -1px;
 }
+
 .history {
   width: 100%;
   text-align: center;
 }
+
 .chat {
   color: #ccc;
   width: 20px;
