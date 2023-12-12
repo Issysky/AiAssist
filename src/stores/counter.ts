@@ -26,8 +26,18 @@ export const useTalkStore = defineStore('talk', () => {
   ])
   // 模式提示词
   const buttonArr = [
-    { type: 'info', text: '模型1', model:"现在请你扮演一个小学生，你的名字叫小明，你的年龄是10岁，你的爱好是打篮球" , isActive: true },
-    { type: 'info', text: '模型2', model: "现在请你扮演一个大学生，你的名字叫小红，你的年龄是18岁，你的爱好是打羽毛球", isActive: false }
+    {
+      index: '1',
+      model: '现在请你扮演一个小学生，你的名字叫小明，你的年龄是10岁，你的爱好是打篮球',
+      text: 'model1',
+      isActive: 1
+    },
+    {
+      index: '2',
+      model: '现在请你扮演一个大学生，你的名字叫小红，你的年龄是18岁，你的爱好是打羽毛球',
+      text: 'model2',
+      isActive: 0
+    }
   ] as const
 
   // 通义千问接口地址
@@ -99,14 +109,14 @@ export const useTalkStore = defineStore('talk', () => {
       },
       {
         role: 'user',
-        content:prompt
+        content: prompt
       },
       {
         role: 'assistant',
         content: '好的，我了解了'
       }
     ]
-    // console.log(promptArr)
+    console.log(promptArr)
   }
   // 将返回内容分解为单个字符拼接到数组中，实现字符逐个出现的效果
   function combination(content: string) {

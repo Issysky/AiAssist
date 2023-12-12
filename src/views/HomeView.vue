@@ -103,11 +103,11 @@ const clear = () => {
   .header {
     position: fixed;
     top: 0;
-    left: 5%;
+    left: 7.5%;
     width: 100%;
     text-align: center;
     // background-color: #bfc;
-    height: 40px;
+    height: 44px;
     font-size: 44px;
   }
 
@@ -142,9 +142,9 @@ const clear = () => {
   .message-wrapper {
     width: 40vw;
     overflow: hidden;
-    height: 80vh;
+    height: 75vh;
     overflow-y: auto;
-    margin-top: 20px;
+    margin-top: 44px;
 
     .message-area {
       width: 35vw;

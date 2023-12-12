@@ -7,27 +7,14 @@
         <Tools />
       </el-icon>
     </div>
-    <!-- <el-button class="new-chat" plain type="info"
-      ><el-icon class="plus"><Plus /></el-icon>
-      <p>新对话</p>
-    </el-button> -->
     <div class="options">
-      <el-button @click="changeModel(button.model)" v-for="button in store.buttonArr" :key="button.text"
+      <!-- <el-button @click="changeModel(button.model)" v-for="button in store.buttonArr" :key="button.text"
         :type="button.type" text>{{
           button.text
-        }}</el-button>
+        }}</el-button> -->
+      <button class="btn" :class="{ 'active': button.isActive }" @click="changeModel(button.model)"
+        v-for="button in store.buttonArr">{{ button.text }}</button>
     </div>
-    <!-- <div class="history">
-      <div class="label">
-        <p>历史会话</p>
-        <el-icon class="chat" style="position: relative; right: 0"><ChatDotRound /></el-icon>
-      </div>
-      <ul>
-        <el-button class="talk" v-for="talk in talks" :key="talk.text" :type="talk.type" text>{{
-          talk.text
-        }}</el-button>
-      </ul>
-    </div> -->
   </div>
 </template>
 
@@ -48,7 +35,10 @@ const store = useTalkStore()
 const changeModel = (model: string) => {
   store.resetMessage()
   store.changePrompt(model)
-  store.buttonArr
+  // 更新按钮的激活状态
+  store.buttonArr.forEach((button) => {
+    button.isActive = button.model === model;
+  });
 }
 
 </script>
@@ -62,7 +52,7 @@ const changeModel = (model: string) => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: transparent;
+  background-color: #000000;
   border-right: 1px solid #ccc;
 }
 
@@ -86,6 +76,7 @@ const changeModel = (model: string) => {
   font-size: 21px;
   margin: 0;
   flex: 1;
+  color: #fff;
 }
 
 .tool {
@@ -113,6 +104,28 @@ const changeModel = (model: string) => {
   border-radius: 10px;
   text-align: left;
   line-height: 40px;
+}
+
+.btn {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 40px;
+  color: #FFF;
+  font-size: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #FFFFFF22;
+}
+
+.active {
+  background-color: #FFFFFF22;
 }
 
 .plus {
@@ -150,5 +163,4 @@ const changeModel = (model: string) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-</style>
+}</style>
