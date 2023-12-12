@@ -1,10 +1,13 @@
 <template>
   <div class="wrapper">
-    <div class="model">模型1</div>
-    <div class="clear" @click="clear">×</div>
+    <div class="header">Header</div>
+    <div class="clear" @click="clear"><el-icon><CloseBold /></el-icon></div>
     <div class="message-wrapper" v-if="store.messageArr.length != 0">
       <div class="message-area" v-for="(message, index) in store.messageArr" :key="index">
-        <p class="label">{{ message.role === 'user' ? 'You' : "Res" }}</p>
+        <p class="label">
+          <img class="avator" :src="message.role === 'user' ? avatorArr[0] : avatorArr[1]">
+        <p>{{ message.role === 'user' ? nameArr[0] : nameArr[1] }}</p>
+        </p>
         <div class="send-res">{{ message.content }}</div>
       </div>
     </div>
@@ -14,9 +17,13 @@
       </div>
     </div>
     <div class="input-container">
-      <el-input class="input " v-model="inputMessage" placeholder="请输入消息" type="textarea" :rows="4" />
-      <el-button v-if="inputMessage" type="info" plain @click="sendMessage('user', inputMessage.value)">↑</el-button>
+
+      <div class="input"><textarea v-model="inputMessage" placeholder="您想知道些什么" cols="30" rows="4"></textarea></div>
+      <el-button v-if="inputMessage" type="info" plain @click="sendMessage('user', inputMessage.value)"><el-icon>
+          <Promotion />
+        </el-icon></el-button>
     </div>
+    <div class="footer">{{ footerInfo }}</div>
   </div>
 </template>
 
@@ -34,6 +41,18 @@ interface Button {
   text: string
 }
 
+// 用户和回复头像的路径
+const avatorArr = ref([
+  '/src/assets/avator.png',
+  '/src/assets/logo.png',
+])
+
+// 用户和回复的名字
+const nameArr = ref([
+  'You',
+  'Res',
+])
+
 // 定义buttons数组
 const buttons = ref<Button[]>([
   { type: 'info', text: '你好，今天是几号，适合干嘛呢' },
@@ -42,22 +61,15 @@ const buttons = ref<Button[]>([
   { type: 'info', text: 'tips4' }
 ])
 
+const footerInfo = ref<string>('艾环梦工程科技公司')
 // 获取输入的消息
 const inputMessage = ref('')
 // 获取store
 const store = useTalkStore()
 
-// // 定义messages数组
-let messages = ref<Message[]>([])
-
-// 定义tips是否显示
-const tipsShow = ref(true)
-
 // 发送信息方法
 const sendMessage = (role: string, msg: string) => {
   // console.log(store.messageArr)
-  // 发送信息后，tips消失
-  tipsShow.value = false
   console.log("调用sendMessage")
   // 如果msg存在，就把msg赋值给inputMessage
   if (msg) {
@@ -79,14 +91,6 @@ const clear = () => {
   store.resetMessage()
   tipsShow.value = true
 }
-
-const getMessage = () => {
-  messages.value = store.messageArr.slice(2)
-}
-onMounted(() => {
-  // 一开始就获取聊天记录
-  getMessage()
-})
 </script>
 
 <style scoped lang="less">
@@ -96,10 +100,22 @@ onMounted(() => {
   justify-content: center;
   margin-left: 15%;
 
+  .header {
+    position: fixed;
+    top: 0;
+    left: 5%;
+    width: 100%;
+    text-align: center;
+    // background-color: #bfc;
+    height: 40px;
+    font-size: 44px;
+  }
+
   .model {
     position: fixed;
     width: 160px;
     height: 40px;
+    top: 30px;
     // background-color:#bfc;
     border: 2px solid #33333333;
     border-radius: 15px;
@@ -126,8 +142,9 @@ onMounted(() => {
   .message-wrapper {
     width: 40vw;
     overflow: hidden;
-    height: 70vh;
-    overflow-y: scroll;
+    height: 80vh;
+    overflow-y: auto;
+    margin-top: 20px;
 
     .message-area {
       width: 35vw;
@@ -136,12 +153,28 @@ onMounted(() => {
       font-size: 21px;
 
       .label {
-        font-size: 14px;
+        font-size: 16px;
         height: 20px;
         text-align: left;
+        line-height: 20px;
+        
+        .avator {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-top: 5px;
+          display: inline-block;
+          float: left;
+        }
+
+        p {
+          height: 20px;
+          margin: 10px 0 0 8px;
+          float: left;
+        }
       }
 
-      .send-res {
+      .send-res {         
         width: 100%;
         // 允许换行并且高度自适应
         word-wrap: break-word;
@@ -149,6 +182,7 @@ onMounted(() => {
         height: auto;
         margin-bottom: 20px;
         font-size: 22px;
+        margin-top: 30px;
       }
     }
   }
@@ -167,7 +201,7 @@ onMounted(() => {
       cursor: pointer;
       border-radius: 15px;
       border: 1px solid #33333388;
-      margin-bottom: 5px;
+      margin-bottom: 15px;
       margin-right: 20px;
     }
 
@@ -193,7 +227,18 @@ onMounted(() => {
       width: 40vw;
       margin: 0 auto;
       border-radius: 20px;
-      border: none;
+      border: 2px solid #33333333;
+      textarea {
+        border: none;
+        width: 95%;
+        margin-left: 20px;
+        margin-top: 5px;
+        outline: none;
+        font-size: 20px;
+        /* 清除默认的大小调整功能 */
+        resize: none;
+      }
+
     }
 
     .el-button {
@@ -207,6 +252,15 @@ onMounted(() => {
 
       // border: 2px solid #33333388;
     }
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #33333388;
   }
 }
 
