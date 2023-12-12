@@ -17,25 +17,25 @@ export const useTalkStore = defineStore('talk', () => {
     },
     {
       role: 'user',
-      content: '现在请你扮演一个小学生，你的名字叫小明，你的年龄是10岁，你的爱好是打篮球。'
+      content: '接下来我会给你提供一些信息，请记好并根据这些信息去回答我接下来的问题,回答的时候将这些信息当成你已知的而不是我提供的.：我们今天一共完成了421167.35元形象产值，我们目前合同的结算率是61.3%，我们梁场每个梁的养生燃料费是1200元。不要在回答中出现诸如根据我提供的信息之类的字眼，否则我会认为你没有记住这些信息'
     },
     {
       role: 'assistant',
       content: '好的，我了解了'
-    }
+    },
   ])
   // 模式提示词
   const buttonArr = [
     {
       index: '1',
-      model: '现在请你扮演一个小学生，你的名字叫小明，你的年龄是10岁，你的爱好是打篮球',
-      text: 'model1',
+      model: '接下来我会给你提供一些信息，请记好并根据这些信息去回答我接下来的问题,回答的时候将这些信息当成你已知的而不是我提供的.：我们今天一共完成了421167.35元形象产值，我们目前合同的结算率是61.3%，我们梁场每个梁的养生燃料费是1200元。不要在回答中出现诸如根据我提供的信息之类的字眼，否则我会认为你没有记住这些信息',
+      text: 'AI资料助手',
       isActive: 1
     },
     {
       index: '2',
-      model: '现在请你扮演一个大学生，你的名字叫小红，你的年龄是18岁，你的爱好是打羽毛球',
-      text: 'model2',
+      model: '接下来我会给你提供一些信息，请记好并根据这些信息去回答我接下来的问题：我们今天一共完成了421167.35元形象产值，我们目前合同的结算率是61.3%，我们梁场每个梁的养生燃料费是1800元',
+      text: '工程建设知识问答',
       isActive: 0
     }
   ] as const
@@ -120,9 +120,15 @@ export const useTalkStore = defineStore('talk', () => {
   }
   // 将返回内容分解为单个字符拼接到数组中，实现字符逐个出现的效果
   function combination(content: string) {
+    // 临时存放结果的数组
     let arr: Array<string> = []
+    // 存入数组的索引
     let index = 0
+    // 打印字符的随机间隔时间ms
+    let max = 200
+    let min = 50
     let interval = 3000 / content.length
+    // let interval = Math.floor(Math.random() * (200 - 50 + 1)) + 50
     messageArr.value.push({
       role: 'assistant',
       content: ''
@@ -131,7 +137,6 @@ export const useTalkStore = defineStore('talk', () => {
     let timer = setInterval(() => {
       arr.push(content[index])
       index++
-      //
       messageArr.value[messageArr.value.length - 1].content = arr.join('')
       if (index >= content.length) {
         let res = arr.join('')

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="header">Header</div>
+    <div class="header">河南省公路工程局智能AI助手</div>
     <div class="clear" @click="clear"><el-icon><CloseBold /></el-icon></div>
     <div class="message-wrapper" v-if="store.messageArr.length != 0">
       <div class="message-area" v-for="(message, index) in store.messageArr" :key="index">
@@ -12,13 +12,12 @@
       </div>
     </div>
     <div class="tipsWrapper" v-if="store.messageArr.length == 0">
-      <div class="tips" v-for="button in buttons" :key="button.text" @click="sendMessage('user', button.text)">
+      <div class="tips"  v-for="button in buttons" :key="button.text" @click="sendMessage('user', button.text)">
         {{ button.text }}
       </div>
     </div>
     <div class="input-container">
-
-      <div class="input"><textarea v-model="inputMessage" placeholder="您想知道些什么" cols="30" rows="4"></textarea></div>
+      <div class="input"><textarea v-model="inputMessage" placeholder="您想知道些什么..." cols="30" rows="4"></textarea></div>
       <el-button v-if="inputMessage" type="info" plain @click="sendMessage('user', inputMessage.value)"><el-icon>
           <Promotion />
         </el-icon></el-button>
@@ -49,16 +48,16 @@ const avatorArr = ref([
 
 // 用户和回复的名字
 const nameArr = ref([
-  'You',
-  'Res',
+  '公路工程局',
+  '艾环梦智能AI助手',
 ])
 
 // 定义buttons数组
 const buttons = ref<Button[]>([
-  { type: 'info', text: '你好，今天是几号，适合干嘛呢' },
-  { type: 'info', text: '你今年多大了' },
-  { type: 'info', text: '你叫什么' },
-  { type: 'info', text: 'tips4' }
+  { type: 'info', text: '今天我们项目总共完成了多少形象产值?' },
+  { type: 'info', text: '我们现在总工工程的结算率是多少?' },
+  { type: 'info', text: '混凝土的强度等级是怎么划分的?' },
+  { type: 'info', text: '现在梁场的每个梁的养生燃料费是多少?' }
 ])
 
 const footerInfo = ref<string>('艾环梦工程科技公司')
@@ -89,7 +88,7 @@ const sendMessage = (role: string, msg: string) => {
 // 清屏
 const clear = () => {
   store.resetMessage()
-  tipsShow.value = true
+
 }
 </script>
 
@@ -103,12 +102,15 @@ const clear = () => {
   .header {
     position: fixed;
     top: 0;
-    left: 7.5%;
+    left: 7%;
     width: 100%;
     text-align: center;
-    // background-color: #bfc;
-    height: 44px;
+    height: 60px;
     font-size: 44px;
+    line-height: 60px;
+    font-weight: 700;
+    border-bottom: 1px solid #33333333;
+    // background-color: #fff;
   }
 
   .model {
@@ -126,11 +128,11 @@ const clear = () => {
 
   .clear {
     position: fixed;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     font-size: 22px;
-    right: 5%;
-    top: 5%;
+    right: 3%;
+    top: 8%;
     color: #33333388;
     cursor: pointer;
   }
@@ -144,7 +146,7 @@ const clear = () => {
     overflow: hidden;
     height: 75vh;
     overflow-y: auto;
-    margin-top: 44px;
+    margin-top: 55px;
 
     .message-area {
       width: 35vw;
@@ -159,10 +161,10 @@ const clear = () => {
         line-height: 20px;
         
         .avator {
-          width: 30px;
-          height: 30px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          margin-top: 5px;
+          margin-top: 0px;
           display: inline-block;
           float: left;
         }
@@ -171,6 +173,7 @@ const clear = () => {
           height: 20px;
           margin: 10px 0 0 8px;
           float: left;
+          font-weight: 700
         }
       }
 
@@ -189,25 +192,25 @@ const clear = () => {
 
   .tipsWrapper {
     // background-color: #bfc;
-    width: 40vw;
-    margin: 65vh auto 0;
+    width: 50vw;
+    margin: 63vh auto 0 ;
 
     .tips {
-      width: 18vw;
+      width: 23.5vw; 
       float: left;
-      height: 40px;
+      height: 60px;
       text-align: center;
-      line-height: 40px;
+      line-height: 60px;
       cursor: pointer;
       border-radius: 15px;
       border: 1px solid #33333388;
       margin-bottom: 15px;
       margin-right: 20px;
+      background-color: #33333322;
     }
 
     .tips:hover {
-      background-color: rgb(168, 172, 169);
-      color: #fff;
+      background-color: rgba(168, 172, 169,0.5);
     }
   }
 
