@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper">
-    <div class="header">河南省公路工程局智能AI助手</div>
-    <div class="clear" @click="clear"><el-icon><CloseBold /></el-icon></div>
+    <div class="header">{{ homeViewText.headerText }}</div>
+    <div class="clear" @click="clear"><el-icon>
+        <CloseBold />
+      </el-icon></div>
     <div class="message-wrapper" v-if="store.messageArr.length != 0">
       <div class="message-area" v-for="(message, index) in store.messageArr" :key="index">
         <p class="label">
@@ -12,7 +14,7 @@
       </div>
     </div>
     <div class="tipsWrapper" v-if="store.messageArr.length == 0">
-      <div class="tips"  v-for="button in buttons" :key="button.text" @click="sendMessage('user', button.text)">
+      <div class="tips" v-for="button in buttons" :key="button.text" @click="sendMessage('user', button.text)">
         {{ button.text }}
       </div>
     </div>
@@ -28,7 +30,10 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useTalkStore } from '../stores/counter'
+import { useTalkStore } from '../stores/talk'
+import homeViewText from '../assets/json/homeView.json'
+import avator from '../assets/avator.png'
+import logo from '../assets/logo.png'
 
 // 定义消息类型
 interface Message {
@@ -42,27 +47,26 @@ interface Button {
 
 // 用户和回复头像的路径
 const avatorArr = ref([
-  '/src/assets/avator.png',
-  '/src/assets/logo.png',
+  avator, logo
 ])
+
 
 // 用户和回复的名字
 const nameArr = ref([
-  '公路工程局',
-  '艾环梦智能AI助手',
+  ...homeViewText.nameArr
 ])
 
 // 定义buttons数组
 const buttons = ref<Button[]>([
-  { type: 'info', text: '今天我们项目总共完成了多少形象产值?' },
-  { type: 'info', text: '我们现在总工工程的结算率是多少?' },
-  { type: 'info', text: '混凝土的强度等级是怎么划分的?' },
-  { type: 'info', text: '现在梁场的每个梁的养生燃料费是多少?' }
+  { type: 'info', text: homeViewText.buttonArr[0] },
+  { type: 'info', text: homeViewText.buttonArr[1] },
+  { type: 'info', text: homeViewText.buttonArr[2] },
+  { type: 'info', text: homeViewText.buttonArr[3] }
 ])
 
 const footerInfo = ref<string>('艾环梦工程科技公司')
 // 获取输入的消息
-const inputMessage = ref('')
+const inputMessage = ref<any>('')
 // 获取store
 const store = useTalkStore()
 
@@ -159,13 +163,13 @@ const clear = () => {
         height: 20px;
         text-align: left;
         line-height: 20px;
-        
+
         .avator {
           width: 40px;
           height: 40px;
           border-radius: 50%;
           margin-top: 0px;
-          display: inline-block;
+          // display: inline-block;
           float: left;
         }
 
@@ -177,7 +181,7 @@ const clear = () => {
         }
       }
 
-      .send-res {         
+      .send-res {
         width: 100%;
         // 允许换行并且高度自适应
         word-wrap: break-word;
@@ -193,10 +197,10 @@ const clear = () => {
   .tipsWrapper {
     // background-color: #bfc;
     width: 50vw;
-    margin: 63vh auto 0 ;
+    margin: 63vh auto 0;
 
     .tips {
-      width: 23.5vw; 
+      width: 23.5vw;
       float: left;
       height: 60px;
       text-align: center;
@@ -210,7 +214,7 @@ const clear = () => {
     }
 
     .tips:hover {
-      background-color: rgba(168, 172, 169,0.5);
+      background-color: rgba(168, 172, 169, 0.5);
     }
   }
 
@@ -231,6 +235,7 @@ const clear = () => {
       margin: 0 auto;
       border-radius: 20px;
       border: 2px solid #33333333;
+
       textarea {
         border: none;
         width: 95%;

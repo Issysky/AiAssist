@@ -1,12 +1,17 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+// 引入json文件
+import talkData from '../assets/json/talk.json'
+
+
 
 export const useTalkStore = defineStore('talk', () => {
   interface message {
     role: string
     content: string
   }
+
   // 存放message的数组
   const messageArr = ref<message[]>([])
   // 定义存放提示信息的数组
@@ -17,35 +22,36 @@ export const useTalkStore = defineStore('talk', () => {
     },
     {
       role: 'user',
-      content: '接下来我会给你提供一些信息，请记好并根据这些信息去回答我接下来的问题,回答的时候将这些信息当成你已知的而不是我提供的.：我们今天一共完成了421167.35元形象产值，我们目前合同的结算率是61.3%，我们梁场每个梁的养生燃料费是1200元。不要在回答中出现诸如根据我提供的信息之类的字眼，否则我会认为你没有记住这些信息'
+      content: talkData.model1
     },
     {
       role: 'assistant',
       content: '好的，我了解了'
-    },
+    }
   ])
   // 模式提示词
-  const buttonArr = [
+  const buttonArr =<any>[
     {
       index: '1',
-      model: '接下来我会给你提供一些信息，请记好并根据这些信息去回答我接下来的问题,回答的时候将这些信息当成你已知的而不是我提供的.：我们今天一共完成了421167.35元形象产值，我们目前合同的结算率是61.3%，我们梁场每个梁的养生燃料费是1200元。不要在回答中出现诸如根据我提供的信息之类的字眼，否则我会认为你没有记住这些信息',
-      text: 'AI资料助手',
+      model: talkData.model1,
+      text: talkData.button1,
       isActive: 1
     },
     {
       index: '2',
-      model: '接下来我会给你提供一些信息，请记好并根据这些信息去回答我接下来的问题：我们今天一共完成了421167.35元形象产值，我们目前合同的结算率是61.3%，我们梁场每个梁的养生燃料费是1800元',
-      text: '工程建设知识问答',
+      model: talkData.model2,
+      text: talkData.button2,
       isActive: 0
     }
-  ] as const
+  ]
 
   // 通义千问接口地址
-  const url = '/api'
+  const url = '119.45.206.196:5012/test'
+  // const url = '/api/v1/services/aigc/text-generation/generation'
   // 请求头
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: 'sk-0742b588c23144b4a0fcf5cbc3482460'
+    Authorization: talkData.key
     // Authorization: 'sk-41a613af91ba496890f78e1eb57a27dd'
   }
   // 请求体
@@ -67,7 +73,7 @@ export const useTalkStore = defineStore('talk', () => {
   function getTalks() {
     // 将messagesArr.value赋值给请求体
     data.input.messages = [...promptArr.value, ...messageArr.value]
-    console.log(data.input.messages)
+    // console.log(data.input.messages)
     console.log('调用getTalks发送请求')
     axios
       .post(url, data, { headers })
