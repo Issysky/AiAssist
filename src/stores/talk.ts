@@ -4,12 +4,17 @@ import axios from 'axios'
 // 引入json文件
 import talkData from '../assets/json/talk.json'
 
-
-
 export const useTalkStore = defineStore('talk', () => {
   interface message {
     role: string
     content: string
+  }
+  // buttonArr的类型
+  interface btnType {
+    index: number
+    model: string
+    text: string
+    isActive: boolean
   }
 
   // 存放message的数组
@@ -30,24 +35,25 @@ export const useTalkStore = defineStore('talk', () => {
     }
   ])
   // 模式提示词
-  const buttonArr =<any>[
+  const buttonArr = ref<btnType[]>([
     {
-      index: '1',
+      index: 1,
       model: talkData.model1,
       text: talkData.button1,
-      isActive: 1
+      isActive: true
     },
     {
-      index: '2',
+      index: 2,
       model: talkData.model2,
       text: talkData.button2,
-      isActive: 0
+      isActive: false
     }
-  ]
-
+  ])
+  // 定义定时器
+  let timer: any = null
   // 通义千问接口地址
-  const url = '119.45.206.196:5012/test'
-  // const url = '/api/v1/services/aigc/text-generation/generation'
+  // const url = '119.45.206.196:5012/test'
+  const url = '/api/v1/services/aigc/text-generation/generation'
   // 请求头
   const headers = {
     'Content-Type': 'application/json',
@@ -104,6 +110,10 @@ export const useTalkStore = defineStore('talk', () => {
   }
   // 清空消息数组
   function resetMessage() {
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
     messageArr.value = []
   }
   // 更换提示信息
@@ -139,8 +149,8 @@ export const useTalkStore = defineStore('talk', () => {
       role: 'assistant',
       content: ''
     })
-    // 定义计时器，每隔interval毫秒将content中的一个字符拼接到数组中
-    let timer = setInterval(() => {
+    // 启用计时器，每隔interval毫秒将content中的一个字符拼接到数组中
+    timer = setInterval(() => {
       arr.push(content[index])
       index++
       messageArr.value[messageArr.value.length - 1].content = arr.join('')

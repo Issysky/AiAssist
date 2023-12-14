@@ -19,11 +19,11 @@
       </div>
     </div>
     <div class="input-container">
-      <div class="input"><textarea v-model="inputMessage" placeholder="您想知道些什么..." cols="30" rows="4"></textarea></div>
-      <el-button v-if="inputMessage" type="info" plain @click="sendMessage('user', inputMessage.value)"><el-icon>
-          <Promotion />
-        </el-icon></el-button>
-    </div>
+      <div class="input"><textarea v-model="inputMessage"  @keydown.enter="sendMessage('user', inputMessage)" placeholder="您想知道些什么..." cols="30" rows="4"></textarea></div>
+        <el-button v-if="inputMessage" type="info" plain @click="sendMessage('user', inputMessage)"><el-icon>
+            <Promotion />
+          </el-icon></el-button>
+      </div>
     <div class="footer">{{ footerInfo }}</div>
   </div>
 </template>
@@ -66,7 +66,7 @@ const buttons = ref<Button[]>([
 
 const footerInfo = ref<string>('艾环梦工程科技公司')
 // 获取输入的消息
-const inputMessage = ref<any>('')
+let inputMessage = ref<string>('')
 // 获取store
 const store = useTalkStore()
 
@@ -92,8 +92,18 @@ const sendMessage = (role: string, msg: string) => {
 // 清屏
 const clear = () => {
   store.resetMessage()
-
 }
+// shift+enter换行
+// const handleEnterKey = (event:KeyboardEvent) => {
+//   if (event.shiftKey) {
+//     // 如果同时按下了 Shift 键，就插入一个换行符
+//     inputMessage += '\n';
+//   } else {
+//     // 否则，就发送消息
+//     sendMessage('user', inputMessage);
+//     inputMessage = '';
+//   }
+// };
 </script>
 
 <style scoped lang="less">
