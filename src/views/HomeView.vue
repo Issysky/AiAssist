@@ -7,7 +7,7 @@
     <div class="message-wrapper" v-if="store.messageArr.length != 0">
       <div class="message-area" v-for="(message, index) in store.messageArr" :key="index">
         <p class="label">
-          <img class="avator" :src="message.role === 'user' ? avatorArr[0] : avatorArr[1]">
+          <img class="avator" :src="message.role === 'user' ? 'https://gateway.guangzc.com/gzc-file-service/attachments/show/9a62df904a6d04d6bd1b3c0ce2e4f10a' : avatorArr[1]">
         <p>{{ message.role === 'user' ? nameArr[0] : nameArr[1] }}</p>
         </p>
         <div class="send-res">{{ message.content }}</div>
@@ -19,7 +19,13 @@
       </div>
     </div>
     <div class="input-container">
-      <div class="input"><textarea v-model="inputMessage"  @keydown.enter="sendMessage('user', inputMessage)" placeholder="您想知道些什么..." cols="30" rows="4"></textarea></div>
+      <div class="input" ref="input" ><textarea v-model="inputMessage"
+        onblur=" const input = document.querySelector('.input')
+  input.style.border = '2px solid #33333333'" 
+        onfocus="const input = document.querySelector('.input')
+  input.style.border = '2px solid #333333'"
+   @keydown.enter="sendMessage('user', inputMessage)" 
+   placeholder="您想知道些什么..." cols="30" rows="4"></textarea></div>
         <el-button v-if="inputMessage" type="info" plain @click="sendMessage('user', inputMessage)"><el-icon>
             <Promotion />
           </el-icon></el-button>
@@ -46,15 +52,10 @@ interface Button {
 }
 
 // 用户和回复头像的路径
-const avatorArr = ref([
-  avator, logo
-])
-
+const avatorArr = ref([avator, logo])
 
 // 用户和回复的名字
-const nameArr = ref([
-  ...homeViewText.nameArr
-])
+const nameArr = ref([...homeViewText.nameArr])
 
 // 定义buttons数组
 const buttons = ref<Button[]>([
@@ -73,7 +74,7 @@ const store = useTalkStore()
 // 发送信息方法
 const sendMessage = (role: string, msg: string) => {
   // console.log(store.messageArr)
-  console.log("调用sendMessage")
+  console.log('调用sendMessage')
   // 如果msg存在，就把msg赋值给inputMessage
   if (msg) {
     inputMessage.value = msg
@@ -92,6 +93,13 @@ const sendMessage = (role: string, msg: string) => {
 // 清屏
 const clear = () => {
   store.resetMessage()
+}
+
+// 点击获取输入框焦点
+const showBorder = () => {
+}
+// 点击取消输入框边框此处需要优化
+const hideBorder = () => {
 }
 // shift+enter换行
 // const handleEnterKey = (event:KeyboardEvent) => {
@@ -187,7 +195,7 @@ const clear = () => {
           height: 20px;
           margin: 10px 0 0 8px;
           float: left;
-          font-weight: 700
+          font-weight: 700;
         }
       }
 
@@ -256,7 +264,6 @@ const clear = () => {
         /* 清除默认的大小调整功能 */
         resize: none;
       }
-
     }
 
     .el-button {
@@ -282,7 +289,6 @@ const clear = () => {
   }
 }
 
-
 .message-wrapper::-webkit-scrollbar {
   width: 8px;
 }
@@ -297,4 +303,5 @@ const clear = () => {
 
 .message-wrapper::-webkit-scrollbar-thumb:hover {
   background-color: #aaa;
-}</style>
+}
+</style>

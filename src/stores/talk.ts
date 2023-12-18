@@ -37,13 +37,13 @@ export const useTalkStore = defineStore('talk', () => {
   // 模式提示词
   const buttonArr = ref<btnType[]>([
     {
-      index: 1,
+      index: 0,
       model: talkData.model1,
       text: talkData.button1,
       isActive: true
     },
     {
-      index: 2,
+      index: 1,
       model: talkData.model2,
       text: talkData.button2,
       isActive: false
@@ -53,7 +53,8 @@ export const useTalkStore = defineStore('talk', () => {
   let timer: any = null
   // 通义千问接口地址
   // const url = '119.45.206.196:5012/test'
-  const url = '/api/v1/services/aigc/text-generation/generation'
+  const url = 'http://119.45.206.196:5012/test'
+  // const url = '/api/v1/services/aigc/text-generation/generation'
   // 请求头
   const headers = {
     'Content-Type': 'application/json',

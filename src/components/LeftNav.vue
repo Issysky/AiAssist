@@ -1,15 +1,25 @@
 <template>
   <div class="left-nav">
     <div class="user-profile">
-      <img class="avatar" src="../assets/avator.png" alt="User Avatar" />
+      <img
+        class="avatar"
+        src="https://gateway.guangzc.com/gzc-file-service/attachments/show/9a62df904a6d04d6bd1b3c0ce2e4f10a"
+        alt="User Avatar"
+      />
       <p class="userName">{{ leftNavData.name }}</p>
       <el-icon class="tool">
         <Tools />
       </el-icon>
     </div>
     <div class="options">
-      <button class="btn" :class="{ 'active': button.isActive }" @click="changeModel(button.model)"
-        v-for="button in store.buttonArr">{{ button.text }}</button>
+      <button
+        :class="{ active: button.isActive,btn:true }"
+        @click="changeModel(button.model,button.index)"
+        v-for="button in store.buttonArr"
+        :key = "button.index"
+      >
+        {{ button.text }}
+      </button>
     </div>
   </div>
 </template>
@@ -21,15 +31,14 @@ import leftNavData from '../assets/json/leftNav.json'
 
 const store = useTalkStore()
 // 切换模式的函数
-const changeModel = (model: string) => {
+const changeModel = (model: string,index:number) => {
   store.resetMessage()
   store.changePrompt(model)
   // 更新按钮的激活状态
-  store.buttonArr.forEach((button: any) => {
-    button.isActive = button.model === model;
-  });
+  store.buttonArr.forEach((button: any,index:number) => {
+    button.isActive = button.model == model
+  })
 }
-
 </script>
 
 <style scoped lang="less">
@@ -88,7 +97,7 @@ const changeModel = (model: string) => {
       border-radius: 10px;
       text-align: center;
       line-height: 40px;
-      color: #FFF;
+      color: #fff;
       font-size: 20px;
       background-color: transparent;
       border: none;
@@ -96,11 +105,11 @@ const changeModel = (model: string) => {
     }
 
     .btn:hover {
-      background-color: #FFFFFF22;
+      background-color: #ffffff22;
     }
 
     .active {
-      background-color: #FFFFFF22;
+      background-color: #ffffff22;
     }
   }
 }
